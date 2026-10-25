@@ -112,8 +112,10 @@ const ZH: Strings = {
 	optCurrentTab: '当前标签页打开',
 	setCloseOnLink: '点击链接后收起',
 	setCloseOnLinkDesc: '点浮层里的链接跳到别处后自动关闭浮层。文档内锚点（#标题）不受影响。',
-	cmdToggle: 'Nav Dock：打开/关闭导航浮层（固定，不随鼠标离开收起）',
-	cmdOpenInTab: 'Nav Dock：在标签页打开导航文档',
+	// ⚠ 命令名不要自己加「Nav Dock：」前缀：Plugin.addCommand() 内部会执行
+	// `e.name = manifest.name + ": " + e.name`，命令面板里本来就带插件名前缀。
+	cmdToggle: '打开/关闭导航浮层（固定，不随鼠标离开收起）',
+	cmdOpenInTab: '在标签页打开导航文档',
 	openInTabBtn: '在标签页打开',
 	resizeHandle: '拖拽调整大小',
 	triggerHover: '当前：悬停打开。点击改为点击打开',
@@ -166,8 +168,9 @@ const EN: Strings = {
 	optCurrentTab: 'Current tab',
 	setCloseOnLink: 'Collapse after clicking a link',
 	setCloseOnLinkDesc: 'Auto-close the panel after a link jumps elsewhere. In-document anchors (#heading) are unaffected.',
-	cmdToggle: 'Nav Dock: Toggle navigation panel (pinned; does not close when the pointer leaves)',
-	cmdOpenInTab: 'Nav Dock: Open navigation note in a tab',
+	// ⚠ 同上：命令名不带插件名前缀，Obsidian 会自动加 "Nav Dock: "。
+	cmdToggle: 'Toggle navigation panel (pinned; does not close when the pointer leaves)',
+	cmdOpenInTab: 'Open navigation note in a tab',
 	openInTabBtn: 'Open in tab',
 	resizeHandle: 'Drag to resize',
 	triggerHover: 'Now: hover to open. Click to switch to click.',
@@ -198,13 +201,13 @@ export function detectLang(): Lang {
 		const m = (window as any).moment;
 		const loc = m && typeof m.locale === 'function' ? String(m.locale() || '') : '';
 		if (loc) return loc.toLowerCase().startsWith('zh') ? 'zh' : 'en';
-	} catch (e) {
+	} catch {
 		/* 继续兜底 */
 	}
 	try {
 		const nav = navigator.language || (navigator.languages && navigator.languages[0]) || '';
 		if (nav) return nav.toLowerCase().startsWith('zh') ? 'zh' : 'en';
-	} catch (e) {
+	} catch {
 		/* 继续兜底 */
 	}
 	return 'en';

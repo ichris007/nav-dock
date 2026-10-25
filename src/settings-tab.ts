@@ -4,19 +4,10 @@
  * 所有面向用户的字符串都取自 this.plugin.uiStrings()（见 i18n.ts），
  * 这个文件里不写死任何一种语言。切语言时整页 display() 重画即可。
  */
-import { PluginSettingTab, Setting, Notice, setIcon, debounce, type App } from 'obsidian';
-import { DEFAULT_SETTINGS, type NavDockSettings } from './constants';
+import { PluginSettingTab, Setting, Notice, setIcon, debounce } from 'obsidian';
+import { DEFAULT_SETTINGS } from './constants';
 import { attachFileSuggest } from './file-suggest';
 import { IconPickerModal, iconDisplayName } from './icon-picker';
-
-type NavDockPluginLike = {
-	app: App;
-	settings: NavDockSettings;
-	saveSettings: () => Promise<void>;
-	refreshRibbonIcon: () => void;
-	uiStrings: () => any;
-	setLanguage: (value: 'auto' | 'zh' | 'en') => Promise<void>;
-};
 
 /** obsidian.d.ts 的 PluginSettingTab 没声明 plugin（构造函数收下但类型里没有），
   * 用 interface 合并补上，类体保持原样搬运。
@@ -144,7 +135,6 @@ export class NavDockSettingTab extends PluginSettingTab {
 				slider
 					.setLimits(280, 720, 10)
 					.setValue(this.plugin.settings.width)
-					.setDynamicTooltip()
 					.onChange(async (value) => {
 						this.plugin.settings.width = value;
 						await this.plugin.saveSettings();
@@ -160,7 +150,6 @@ export class NavDockSettingTab extends PluginSettingTab {
 				slider
 					.setLimits(40, 95, 1)
 					.setValue(this.plugin.settings.maxHeightVh)
-					.setDynamicTooltip()
 					.onChange(async (value) => {
 						this.plugin.settings.maxHeightVh = value;
 						await this.plugin.saveSettings();

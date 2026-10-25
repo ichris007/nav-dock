@@ -126,7 +126,7 @@ bindPopoverGuard(this: any, pop) {
 			if (embed.editMode && typeof embed.editMode.focus === 'function') {
 				try {
 					embed.editMode.focus();
-				} catch (e) {
+				} catch {
 					/* 忽略 */
 				}
 			}
@@ -172,7 +172,7 @@ dismissHoverPreview(this: any) {
 	if (pe && pe.editMode && typeof pe.showPreview === 'function') {
 		try {
 			pe.showPreview(true);   // true = 强制存盘
-		} catch (e) {
+		} catch {
 			/* 忽略 */
 		}
 	}
@@ -181,7 +181,7 @@ dismissHoverPreview(this: any) {
 	if (typeof pop.hide === 'function') {
 		try {
 			pop.hide();
-		} catch (e) {
+		} catch {
 			/* 忽略：hide 内部已经改过 DOM 时可能抛错 */
 		}
 	}
@@ -202,7 +202,7 @@ unpinHoverPreview(this: any) {
 	if (pop && typeof pop.setIsFocused === 'function') {
 		try {
 			pop.setIsFocused(false);
-		} catch (e) {
+		} catch {
 			/* 忽略 */
 		}
 	}
@@ -213,7 +213,7 @@ swallowEscape(this: any, evt) {
 	try {
 		evt.preventDefault();
 		evt.stopPropagation();
-	} catch (e) {
+	} catch {
 		/* 忽略 */
 	}
 },
@@ -262,7 +262,7 @@ isPointerInside(this: any) {
 	let el: Element | null = null;
 	try {
 		el = document.elementFromPoint(p.x, p.y);
-	} catch (e) {
+	} catch {
 		return false;
 	}
 	if (!el) return false;

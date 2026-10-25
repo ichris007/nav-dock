@@ -104,7 +104,7 @@ createTabBeside(this: any, leaf) {
 	if (group && typeof ws.createLeafInTabGroup === 'function') {
 		try {
 			return ws.createLeafInTabGroup(group);
-		} catch (e) {
+		} catch {
 			/* 内部 API 变动就往下走兜底 */
 		}
 	}
@@ -145,7 +145,7 @@ activateLeaf(this: any, leaf, file, subpath) {
 		try {
 			const p = ws.revealLeaf(leaf);
 			if (p && typeof p.catch === 'function') p.catch(() => {});
-		} catch (e) {
+		} catch {
 			/* 忽略：reveal 失败也不影响下面的激活 */
 		}
 	}

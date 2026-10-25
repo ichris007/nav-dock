@@ -4,7 +4,7 @@
  * 为什么不用输入框：没人记得住图标名。getIconIds() 一次给 1500+ 个，全渲染会卡，
  * 所以每批 240 个、滚到底自动续渲染，顶部搜索框按 id 子串过滤。
  */
-import { Modal, getIconIds, setIcon, type App } from 'obsidian';
+import { Modal, getIconIds, setIcon } from 'obsidian';
 import type { Strings } from './i18n';
 
 /** 类体是从 main.js 原样搬运的 JS，字段声明用 interface 合并补上（不动类体）

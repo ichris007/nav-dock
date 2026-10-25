@@ -91,13 +91,13 @@ teardownEmbed(this: any) {
 	// 不会调 unload，编辑器实例和它注册的事件监听会留在那儿
 	try {
 		embed.unload();
-	} catch (e) {
+	} catch {
 		/* 已经卸载过就算了 */
 	}
 	if (this.renderComponent) {
 		try {
 			this.renderComponent.removeChild(embed);
-		} catch (e) {
+		} catch {
 			/* 还没挂上就算了 */
 		}
 	}
@@ -173,7 +173,7 @@ pushEditScope(this: any) {
 		});
 		this.app.keymap.pushScope(scope);
 		this.editScope = scope;
-	} catch (err) {
+	} catch {
 		/* Scope 不可用时不影响编辑本身，只是 Esc 不生效 */
 	}
 },
@@ -184,7 +184,7 @@ popEditScope(this: any) {
 	this.editScope = null;
 	try {
 		this.app.keymap.popScope(scope);
-	} catch (err) {
+	} catch {
 		/* 忽略 */
 	}
 },

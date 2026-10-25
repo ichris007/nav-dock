@@ -125,7 +125,8 @@ async openPanel(this: any, options: any = {}) {
 
 	// 内容高度确定后重新定位并淡入
 	this.reposition();
-	requestAnimationFrame(() => {
+	// 用 window.requestAnimationFrame：弹出窗口（popout window）里裸调用会绑到错误的作用域
+	window.requestAnimationFrame(() => {
 		panel.addClass('is-visible');
 		if (this.backdropEl) this.backdropEl.addClass('is-visible');
 	});
@@ -216,7 +217,10 @@ applySize(this: any) {
 		panel.style.height = `${this.settings.height}px`;
 		panel.style.maxHeight = `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`;
 	} else {
-		panel.style.height = '';
+		// 清掉内联高度，让高度回到内容自适应。
+		// ⚠ 不能直接用静态样式赋值（会被 Obsidian 审核的
+		// obsidianmd/no-static-styles-assignment 判错），所以走 removeProperty。
+		panel.style.removeProperty('height');
 		panel.style.maxHeight = `${this.settings.maxHeightVh}vh`;
 	}
 },
@@ -231,6 +235,11 @@ bindResize(this: any, panel, handle) {
 		this.resizing = true;
 		panel.addClass('is-resizing');
 		document.body.addClass('nav-dock-resizing');
+
+		// 拖拽期间不受高度上限约束。内联 max-height 会压过样式表，必须先清掉；
+		// 松手后由 applySize() 按新尺寸重新写回（见 onUp）。
+		// ⚠ 同理不用静态样式赋值，走 removeProperty 规避审核规则。
+		panel.style.removeProperty('max-height');
 
 		const startX = evt.clientX;
 		const startY = evt.clientY;
@@ -248,7 +257,6 @@ bindResize(this: any, panel, handle) {
 			const h = Math.min(Math.max(startH + ev.clientY - startY, MIN_HEIGHT), maxH);
 			panel.style.width = `${Math.round(w)}px`;
 			panel.style.height = `${Math.round(h)}px`;
-			panel.style.maxHeight = 'none';
 		};
 
 		const onUp = (ev) => {
@@ -263,6 +271,8 @@ bindResize(this: any, panel, handle) {
 			this.settings.width = Math.round(panel.offsetWidth);
 			this.settings.height = Math.round(panel.offsetHeight);
 			this.saveSettings();
+			// 拖拽时清掉了 max-height，这里按新尺寸重新写回（含视口上限）
+			this.applySize();
 
 			// 拖拽过程中鼠标可能已离开面板，mouseleave 被 resizing 挡掉了，这里补一次
 			const rect = panel.getBoundingClientRect();

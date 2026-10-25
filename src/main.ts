@@ -96,7 +96,8 @@ class NavDockPlugin extends Plugin {
 					return;
 				}
 				// 图标触发的浮层一律贴 ribbon；点击模式下固定住
-				this.openPanel({
+				// void：回调是同步签名，openPanel 的失败已在内部处理，这里显式忽略 Promise
+				void this.openPanel({
 					pinned: this.settings.trigger === 'click',
 					placement: 'dock',
 				});
@@ -136,7 +137,7 @@ class NavDockPlugin extends Plugin {
 			document,
 			'pointerdown',
 			(evt) => {
-				const leaf = this.leafFromEl(evt.target as Element);
+				const leaf = this.leafFromEl(evt.target);
 				if (leaf && this.isLiveLeaf(leaf)) this.lastUserLeaf = leaf;
 			},
 			true
@@ -179,7 +180,7 @@ class NavDockPlugin extends Plugin {
 				this.swallowEscape(evt);
 				try {
 					pe.showPreview(true);   // true = 强制存盘
-				} catch (e) {
+				} catch {
 					/* 忽略 */
 				}
 				return;

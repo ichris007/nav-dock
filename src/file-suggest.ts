@@ -6,7 +6,7 @@
  * 全部由 Obsidian 负责，视觉与原生设置一致。筛选用 prepareFuzzySearch 对
  * file.path 打分再排序。
  */
-import { AbstractInputSuggest, prepareFuzzySearch, type App, type TFile } from 'obsidian';
+import { AbstractInputSuggest, prepareFuzzySearch, type TFile } from 'obsidian';
 
 /* ============================================================
  * 设置页用：导航文档筛选 + 图标点选

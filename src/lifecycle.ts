@@ -31,7 +31,7 @@ registerHoverSource(this: any) {
 			defaultMod: false,   // 不用按 Cmd，悬停即预览
 		});
 		this.hoverSourceRegistered = true;
-	} catch (e) {
+	} catch {
 		/* 老版本没有这个 API：不注册也不会崩，只是没有预览 */
 	}
 },
@@ -43,7 +43,7 @@ unregisterHoverSource(this: any) {
 	if (typeof ws.unregisterHoverLinkSource !== 'function') return;
 	try {
 		ws.unregisterHoverLinkSource(HOVER_SOURCE);
-	} catch (e) {
+	} catch {
 		/* 忽略 */
 	}
 },
@@ -92,9 +92,12 @@ applyLanguage(this: any) {
 	this.uiLang = lang;
 	const S = STRINGS[lang] || STRINGS.zh;
 
-	// 命令名：命令面板展示的是命令对象的 name 字段，改对象即生效
-	if (this.cmdToggle) this.cmdToggle.name = S.cmdToggle;
-	if (this.cmdOpenInTab) this.cmdOpenInTab.name = S.cmdOpenInTab;
+	// 命令名：命令面板展示的是命令对象的 name 字段，改对象即生效。
+	// ⚠ addCommand() 注册时会把 name 改成 `manifest.name + ": " + name`；
+	// 这里直接赋 S.cmdToggle 会把那个前缀抹掉，所以必须按同样格式自己补回来。
+	const cmdPrefix = `${this.manifest.name}: `;
+	if (this.cmdToggle) this.cmdToggle.name = cmdPrefix + S.cmdToggle;
+	if (this.cmdOpenInTab) this.cmdOpenInTab.name = cmdPrefix + S.cmdOpenInTab;
 
 	// ribbon 提示：只在「还是默认值或为空」时跟随语言换，自定义文案不动
 	if (!this.settings.label || this.settings.label === (STRINGS[prev] || STRINGS.zh).labelDefault) {
