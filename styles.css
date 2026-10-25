@@ -1,0 +1,346 @@
+/*
+ * Nav Dock —— 贴着 ribbon 弹出的导航浮层
+ *
+ * 视觉全部走 Obsidian / Lifein 主题变量：
+ *   --background-primary / --background-modifier-border / --shadow-l
+ *   --glass-blur-panel / --glass-saturate-panel（主题的面板级玻璃参数）
+ * 想单独调这个浮层，在片段里覆盖 --nav-dock-* 即可，不用改本文件。
+ */
+
+.nav-dock-panel {
+	position: fixed;
+	z-index: var(--layer-popover, 30);
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	overflow: hidden;
+
+	background: var(--nav-dock-bg, var(--background-primary));
+	border: 1px solid var(--nav-dock-border, var(--background-modifier-border));
+	border-radius: var(--nav-dock-radius, var(--radius-l, 12px));
+	box-shadow: var(--nav-dock-shadow, var(--shadow-l, 0 8px 28px rgba(0, 0, 0, 0.16)));
+
+	backdrop-filter: blur(var(--glass-blur-panel, 24px)) saturate(var(--glass-saturate-panel, 140%));
+	-webkit-backdrop-filter: blur(var(--glass-blur-panel, 24px)) saturate(var(--glass-saturate-panel, 140%));
+
+	opacity: 0;
+	transform: translateX(-6px);
+	transition: opacity 0.14s ease, transform 0.14s ease;
+	will-change: opacity, transform;
+}
+
+.nav-dock-panel.is-visible {
+	opacity: 1;
+	transform: none;
+}
+
+/* ---------- 居中模式（命令 / 快捷键 / URI 触发） ---------- */
+
+/* 轻遮罩：只压一层薄暗，点击即关闭，同时挡住背景交互 */
+.nav-dock-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--layer-popover, 30) - 1);
+	background: var(--nav-dock-backdrop, var(--background-modifier-cover, rgba(0, 0, 0, 0.18)));
+	opacity: 0;
+	transition: opacity 0.14s ease;
+}
+
+.nav-dock-backdrop.is-visible {
+	opacity: 1;
+}
+
+/* 居中时从略微缩小淡入，比贴边模式的横向位移更像「开了一扇窗」 */
+.nav-dock-panel.is-centered {
+	min-height: 320px;
+	transform: scale(0.97);
+}
+
+.nav-dock-panel.is-centered.is-visible {
+	transform: none;
+}
+
+/* ---------- 顶部标题栏 ---------- */
+
+.nav-dock-panel .nav-dock-header {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 8px 8px 14px;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.nav-dock-panel .nav-dock-title {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+
+	font-size: var(--font-ui-smaller, 12px);
+	font-weight: var(--font-semibold, 600);
+	letter-spacing: 0.02em;
+	color: var(--text-muted);
+}
+
+.nav-dock-panel .nav-dock-trigger,
+.nav-dock-panel .nav-dock-open {
+	flex: 0 0 auto;
+	--icon-size: 15px;
+	color: var(--text-faint);
+	opacity: 0.75;
+}
+
+/* 打开方式按钮表示的是当前状态，比「在标签页打开」略明显一点 */
+.nav-dock-panel .nav-dock-trigger {
+	color: var(--text-muted);
+	opacity: 0.9;
+}
+
+.nav-dock-panel .nav-dock-trigger:hover,
+.nav-dock-panel .nav-dock-open:hover {
+	color: var(--text-normal);
+	opacity: 1;
+}
+
+/* ---------- 正文区 ---------- */
+
+/* 覆盖 app.css 给 .markdown-preview-view 的高度 / 内边距 / 滚动，
+   改由外层 flex 容器负责高度、本层负责滚动。 */
+.nav-dock-panel .nav-dock-body.markdown-preview-view {
+	flex: 1 1 auto;
+	min-height: 0;
+	height: auto !important;
+	max-height: none !important;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 10px 16px 14px !important;
+	background: transparent !important;
+
+	/* 让内容铺满浮层宽度，而不是跟正文一样被 --file-line-width 卡住 */
+	--file-line-width: 100%;
+	--file-margins: 0;
+}
+
+/* app.css 给 sizer 留了 50vh 的底部空白用于滚动，浮层里必须清掉，
+   否则内容下面会挂一大片空白。 */
+.nav-dock-panel .markdown-preview-sizer {
+	min-height: 0 !important;
+	max-width: 100% !important;
+	margin: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+/* 字号、行高、字体一律不动，全部交给主题的正文规则 —— 浮层里的观感
+   跟正文逐字一致才是这个插件的意义。这里只清掉首块的上外边距，
+   免得顶部多出一截空白。 */
+.nav-dock-panel .markdown-preview-sizer > div > :first-child {
+	margin-top: 0;
+}
+
+/* ---------- 可编辑嵌入 ---------- */
+
+/* 嵌入自带的标题、属性表、右上角打开按钮在浮层里都是多余的
+   （浮层自己有标题栏和打开按钮，属性表会白占一大块高度）。
+   注意 inline-title / metadata-container 在真实环境里是被 prepend 到
+   renderer 的 header 里，不是 .markdown-embed 的直接子元素，所以用后代选择器。 */
+.nav-dock-panel .markdown-embed > .markdown-embed-link,
+.nav-dock-panel .markdown-embed .inline-title,
+.nav-dock-panel .markdown-embed .metadata-container {
+	display: none !important;
+}
+
+/* 主题会给「阅读模式里的嵌入」加边框 + 底色 + 阴影（.markdown-preview-view
+   .markdown-embed）。浮层里这一层是纯容器，得压平，否则正文外多一圈框。 */
+.nav-dock-panel .nav-dock-body .markdown-embed {
+	border: none !important;
+	background-color: transparent !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+/* 嵌入内部又套了一层 .markdown-preview-view，边距要清零，
+   否则正文会在浮层里再缩进一次 */
+.nav-dock-panel .markdown-embed .markdown-preview-view {
+	padding: 0 !important;
+	background-color: transparent;
+	--file-margins: 0;
+	--file-line-width: 100%;
+}
+
+/* 编辑区 / 预览区同宽，切换时不横向跳 */
+.nav-dock-panel .markdown-embed .markdown-embed-content {
+	max-height: none !important;
+	overflow: visible;
+}
+
+.nav-dock-panel .markdown-embed .markdown-source-view.mod-cm6 .cm-scroller {
+	padding: 0 !important;
+}
+
+/* 编辑态：一圈强调色边框，一眼看出现在能打字 */
+.nav-dock-panel.is-editing {
+	border-color: var(--interactive-accent);
+	box-shadow:
+		0 0 0 1px var(--interactive-accent),
+		var(--nav-dock-shadow, var(--shadow-l));
+}
+
+/* ---------- 只读保护 ---------- */
+
+/* 预览态的任务勾选框：放开点击，与阅读模式一致（勾了就是改源文件）。
+   编辑态里它是 CodeMirror 的一部分，本来就能点。 */
+.nav-dock-panel input[type='checkbox'],
+.nav-dock-panel .task-list-item-checkbox {
+	pointer-events: auto;
+}
+
+.nav-dock-panel .nav-dock-error {
+	padding: 8px 0;
+	color: var(--text-error);
+	font-size: var(--font-ui-small);
+}
+
+/* ---------- 右下角拖拽改尺寸 ---------- */
+
+.nav-dock-panel .nav-dock-resize {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	z-index: 3;
+	width: 18px;
+	height: 18px;
+	cursor: nwse-resize;
+	opacity: 0;
+	transition: opacity 0.12s ease;
+}
+
+/* 平时不打扰，鼠标进入浮层才露出来 */
+.nav-dock-panel:hover .nav-dock-resize {
+	opacity: 0.55;
+}
+
+.nav-dock-panel .nav-dock-resize:hover {
+	opacity: 1;
+}
+
+/* L 形角标，比三条斜线更轻，不抢正文的视觉 */
+.nav-dock-panel .nav-dock-resize::after {
+	content: '';
+	position: absolute;
+	right: 3px;
+	bottom: 3px;
+	width: 7px;
+	height: 7px;
+	border-right: 1.5px solid var(--text-faint);
+	border-bottom: 1.5px solid var(--text-faint);
+	border-bottom-right-radius: 2px;
+}
+
+/* 拖拽期间关掉过渡，避免尺寸变化被动画拖慢 */
+.nav-dock-panel.is-resizing {
+	transition: none;
+}
+
+.nav-dock-panel.is-resizing .nav-dock-resize {
+	opacity: 1;
+}
+
+/* 鼠标拖出浮层时也要保持缩放光标，否则手感会断 */
+body.nav-dock-resizing,
+body.nav-dock-resizing * {
+	cursor: nwse-resize !important;
+	user-select: none !important;
+}
+
+
+/* ============================================================
+ * 设置页：文件筛选列表 + 图标选择器
+ * ============================================================ */
+
+/* 文件建议：两行（文件名 + 目录），文件名稍重、目录弱化 */
+.nav-dock-file-item {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	line-height: 1.35;
+}
+
+.nav-dock-file-name {
+	color: var(--text-normal);
+}
+
+.nav-dock-file-dir {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-faint);
+}
+
+/* 图标设置行的预览块 */
+.nav-dock-icon-preview {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	margin-right: var(--size-4-2);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	color: var(--text-muted);
+	background-color: var(--background-primary);
+}
+
+/* 图标选择器 */
+.nav-dock-icon-picker .nav-dock-icon-search {
+	width: 100%;
+	margin-bottom: var(--size-4-3);
+}
+
+.nav-dock-icon-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+	align-content: start;
+	gap: 4px;
+	/*
+	  高度写死，不要用 max-height：搜索时匹配数量一变，弹窗就跟着一缩一胀，
+	  视觉上整扇窗在跳。固定高度后窗口尺寸恒定，只有网格内部滚动。
+	*/
+	height: min(42vh, 360px);
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-right: 2px;
+}
+
+.nav-dock-icon-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	padding: 0;
+	border: 1px solid transparent;
+	border-radius: var(--radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--text-muted);
+	cursor: pointer;
+}
+
+.nav-dock-icon-item:hover {
+	background-color: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+
+.nav-dock-icon-item.is-selected {
+	border-color: var(--interactive-accent);
+	color: var(--interactive-accent);
+	background-color: var(--background-modifier-hover);
+}
+
+.nav-dock-icon-footer {
+	margin-top: var(--size-4-2);
+	font-size: var(--font-ui-smaller);
+	color: var(--text-faint);
+	text-align: right;
+}

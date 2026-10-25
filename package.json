@@ -1,0 +1,22 @@
+{
+  "name": "nav-dock",
+  "version": "0.11.0",
+  "description": "Nav Dock — ribbon 图标弹出 md 导航浮层（Lifein 自用插件）",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs --production",
+    "check": "tsc --noEmit",
+    "verify": "node tools/snapshot.cjs",
+    "sync": "python3 sync.py",
+    "sync:check": "python3 sync.py --check",
+    "test": "/Users/chris/.workbuddy-ai/binaries/python/envs/default/bin/python _test/probe.py && /Users/chris/.workbuddy-ai/binaries/python/envs/default/bin/python _test/probe.py --dark && /Users/chris/.workbuddy-ai/binaries/python/envs/default/bin/python _test/settings_probe.py && /Users/chris/.workbuddy-ai/binaries/python/envs/default/bin/python _test/settings_probe.py --dark"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "esbuild": "^0.28.2",
+    "obsidian": "^1.14.4",
+    "typescript": "^7.0.2"
+  }
+}
