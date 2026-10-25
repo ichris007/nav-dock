@@ -6,6 +6,8 @@
 
 Nav Dock 会在 Ribbon 图标旁打开一个 Markdown 文档浮层。浮层沿用 Obsidian 的 Markdown 预览样式，支持双链、嵌入、Callout、表格等常见内容，也可以直接在浮层中编辑文档。
 
+![](./screenshot/nav-dock.gif)
+
 ## 功能亮点
 
 - **随用随开的导航浮层**：将导航页、常用入口、速查表放在手边，不必切换标签页。
