@@ -6,6 +6,8 @@
 
 Nav Dock opens a pop-up panel beside a Ribbon icon and displays a Markdown document of your choice. The panel follows Obsidian's Markdown preview styling and supports common content such as wikilinks, embeds, callouts, and tables. You can also edit the document directly in the panel.
 
+![](./screenshot/nav-dock.gif)
+
 ## Highlights
 
 - **A navigation panel that's always at hand:** Keep navigation pages, frequently used links, and quick-reference guides close by without switching tabs.
