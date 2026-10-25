@@ -26,6 +26,16 @@ Nav Dock opens a pop-up panel beside a Ribbon icon and displays a Markdown docum
 
 ## Installation
 
+### From the community plugin directory (recommended)
+
+1. Open **Settings → Community plugins** and turn off Restricted mode if it is enabled.
+2. Click **Browse** and search for **Nav Dock**.
+3. Select it, click **Install**, then **Enable**.
+
+### Manual installation
+
+Use this when you need a specific version or the directory is unreachable.
+
 1. Download the latest archive from [GitHub Releases](https://github.com/ichris007/nav-dock/releases).
 2. Extract the archive and place `main.js`, `manifest.json`, and `styles.css` in your vault's `.obsidian/plugins/nav-dock/` directory.
 3. Restart Obsidian, go to **Settings → Community plugins**, refresh the plugin list, and enable **Nav Dock**.

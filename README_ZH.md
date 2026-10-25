@@ -26,6 +26,16 @@ Nav Dock 会在 Ribbon 图标旁打开一个 Markdown 文档浮层。浮层沿�
 
 ## 安装
 
+### 从社区插件市场安装（推荐）
+
+1. 打开 **设置 → 第三方插件**；若「限制模式」已开启，先将其关闭。
+2. 点击 **浏览**，搜索 **Nav Dock**。
+3. 选中后点击 **安装**，再点击 **启用**。
+
+### 手动安装
+
+需要指定版本，或无法访问插件市场时使用。
+
 1. 前往 [GitHub Releases](https://github.com/ichris007/nav-dock/releases) 下载最新版压缩包。
 2. 解压后，将 `main.js`、`manifest.json` 和 `styles.css` 放入库目录下的 `.obsidian/plugins/nav-dock/`。
 3. 重启 Obsidian，进入 **设置 → 第三方插件**，刷新插件列表并启用 **Nav Dock**。
