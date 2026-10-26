@@ -2,6 +2,10 @@
 
 [English](./README.md) | [中文](./README_ZH.md)
 
+[![Downloads](https://img.shields.io/badge/dynamic/json?logo=obsidian&color=%237c3aed&label=downloads&query=%24%5B%22nav-dock%22%5D.downloads&url=https%3A%2F%2Fraw.githubusercontent.com%2Fobsidianmd%2Fobsidian-releases%2Fmaster%2Fcommunity-plugin-stats.json)](https://obsidian.md/plugins?id=nav-dock) ![Obsidian](https://img.shields.io/badge/dynamic/json?query=%24.minAppVersion&url=https%3A%2F%2Fraw.githubusercontent.com%2Fichris007%2Fnav-dock%2Fmain%2Fmanifest.json&label=Obsidian&color=7c3aed&prefix=v) [![GitHub stars](https://img.shields.io/github/stars/ichris007/nav-dock?style=flat&color=%237c3aed)](https://github.com/ichris007/nav-dock/stargazers)
+
+[Report a bug](https://github.com/ichris007/nav-dock/issues/new) · [Request a feature](https://github.com/ichris007/nav-dock/issues/new)
+
 > 将常用导航页、速查表和笔记放在 Obsidian Ribbon 旁边。鼠标悬停或点击图标，即可在浮层中查看内容，无需额外占用标签页。
 
 Nav Dock 会在 Ribbon 图标旁打开一个 Markdown 文档浮层。浮层沿用 Obsidian 的 Markdown 预览样式，支持双链、嵌入、Callout、表格等常见内容，也可以直接在浮层中编辑文档。
