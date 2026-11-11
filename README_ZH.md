@@ -182,3 +182,18 @@ Nav Dock 会在捕获阶段处理浮层中的内部链接点击。由于浮层�
 ## 许可
 
 [MIT](LICENSE)
+
+---
+<div align="center">
+
+### ☕ 支持作者
+
+如果这个项目给你带来了帮助，欢迎请我喝杯咖啡 ☕
+
+微信扫码↓
+
+<img src="https://github.com/ichris007/ichris007/blob/main/images/wechat_donate_qrcode0.png" width="300" alt="微信赞赏码">
+
+感谢每一份支持！
+
+</div>
